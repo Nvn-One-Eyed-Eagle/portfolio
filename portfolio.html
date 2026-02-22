@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Naveen Phartyal — Python Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+/* ─── RESET & ROOT ──────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#050a05;--bg2:#091209;--bg3:#0d160d;
+  --surf:#111c11;--surf2:#162016;
+  --green:#00ff88;--green2:#00cc66;--green3:#00e676;
+  --gdim:#00ff8820;--gdim2:#00ff8810;
+  --text:#e4f2e4;--text2:#8aaa8a;--text3:#4a6a4a;
+  --border:#162816;--border2:#00ff8840;
+  --red:#ff4455;
+  --r:4px;--r2:8px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;cursor:none}
+::selection{background:var(--green);color:var(--bg)}
+a{text-decoration:none;color:inherit}
+button{font-family:'Syne',sans-serif}
+img{display:block}
+
+/* ─── SCROLLBAR ─────────────────────────────────── */
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green2);border-radius:2px}
+
+/* ─── CURSOR ─────────────────────────────────────── */
+#cursor-dot,#cursor-ring{position:fixed;pointer-events:none;z-index:9999;border-radius:50%;transform:translate(-50%,-50%);transition:opacity .3s}
+#cursor-dot{width:7px;height:7px;background:var(--green)}
+#cursor-ring{width:30px;height:30px;border:1.5px solid var(--green);opacity:.5;transition:left .08s,top .08s,opacity .3s}
+
+/* ─── LAYOUT ─────────────────────────────────────── */
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* ─── ANIMATIONS ─────────────────────────────────── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 20px #00ff8830}50%{box-shadow:0 0 60px #00ff8850}}
+.anim-1{animation:fadeUp .7s .1s both}
+.anim-2{animation:fadeUp .7s .2s both}
+.anim-3{animation:fadeUp .7s .3s both}
+.anim-4{animation:fadeUp .7s .4s both}
+.anim-5{animation:fadeUp .7s .5s both}
+
+/* ─── NAV ────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;background:#050a05ee;backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:18px 0}
+.nav-logo{font-family:'Space Mono',monospace;font-size:14px;color:var(--green);letter-spacing:2px;cursor:none}
+.nav-logo span{color:var(--text2)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-link{font-family:'Space Mono',monospace;font-size:11px;color:var(--text2);letter-spacing:1.5px;transition:color .2s;cursor:none}
+.nav-link:hover{color:var(--green)}
+.nav-btn{font-family:'Space Mono',monospace;font-size:11px;color:var(--green);border:1px solid var(--green);background:transparent;padding:7px 16px;cursor:none;letter-spacing:1px;transition:all .2s}
+.nav-btn:hover{background:var(--green);color:var(--bg)}
+.nav-toggle{display:none;background:none;border:none;color:var(--green);cursor:none;font-size:22px}
+.nav-mobile{display:none}
+
+/* ─── HERO ───────────────────────────────────────── */
+.hero{min-height:100vh;display:flex;align-items:center;padding-top:80px;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;opacity:.5}
+.hero-glow{position:absolute;width:700px;height:700px;background:radial-gradient(circle,#00ff8812 0%,transparent 65%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.hero-scanline{position:absolute;inset:0;overflow:hidden;pointer-events:none;opacity:.03}
+.hero-scanline::after{content:'';position:absolute;width:100%;height:2px;background:var(--green);animation:scanline 8s linear infinite}
+.hero-content{position:relative;z-index:1}
+.hero-tag{display:inline-flex;align-items:center;gap:9px;font-family:'Space Mono',monospace;font-size:10px;color:var(--green);border:1px solid var(--border2);background:var(--gdim2);padding:6px 14px;letter-spacing:2.5px;margin-bottom:30px}
+.hero-tag-dot{width:7px;height:7px;background:var(--green);border-radius:50%;animation:pulse 2s infinite}
+.hero-name{font-size:clamp(52px,9vw,110px);font-weight:800;line-height:.93;letter-spacing:-3px;margin-bottom:18px}
+.hero-name .first{color:var(--text);display:block}
+.hero-name .last{color:var(--green);display:block}
+.hero-subtitle{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);margin-bottom:28px;letter-spacing:1px}
+.hero-desc{max-width:520px;font-size:16px;color:var(--text2);line-height:1.75;margin-bottom:40px}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:10px;background:var(--green);color:var(--bg);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:14px 28px;cursor:none;transition:all .2s;border:none}
+.btn-primary:hover{background:var(--green2);transform:translateY(-2px)}
+.btn-secondary{display:inline-flex;align-items:center;gap:10px;background:transparent;color:var(--green);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1.5px;padding:13px 24px;cursor:none;border:1px solid var(--border2);transition:all .2s}
+.btn-secondary:hover{border-color:var(--green);background:var(--gdim)}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:2px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.hero-scroll::after{content:'';width:1px;height:40px;background:linear-gradient(to bottom,var(--text3),transparent);animation:fadeIn 1s 1s both}
+
+/* ─── SECTION ────────────────────────────────────── */
+section{padding:100px 0}
+.section-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:4px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';width:48px;height:1px;background:var(--green)}
+.section-title{font-size:clamp(34px,5vw,58px);font-weight:800;line-height:1.02;letter-spacing:-1.5px;margin-bottom:56px}
+.green{color:var(--green)}
+
+/* ─── ABOUT ──────────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start}
+.about-text p{color:var(--text2);line-height:1.82;font-size:15.5px;margin-bottom:20px}
+.about-stats{display:flex;gap:36px;margin-top:32px;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column}
+.stat-num{font-size:42px;font-weight:800;color:var(--green);line-height:1;font-family:'Space Mono',monospace}
+.stat-lbl{font-size:10px;color:var(--text3);margin-top:5px;letter-spacing:2px;font-family:'Space Mono',monospace}
+
+/* TERMINAL */
+.terminal{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;font-family:'Space Mono',monospace;font-size:12.5px}
+.term-bar{background:var(--surf);padding:10px 16px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border)}
+.t-dot{width:11px;height:11px;border-radius:50%}
+.t-r{background:#ff5f57}.t-y{background:#febc2e}.t-g{background:#28c840}
+.term-name{font-size:10px;color:var(--text3);margin-left:6px;letter-spacing:1px}
+.term-body{padding:20px 22px}
+.t-line{margin-bottom:7px;line-height:1.5}
+.prompt{color:var(--green)}
+.cmd{color:var(--text)}
+.val{color:var(--green2)}
+.cmt{color:var(--text3)}
+.cursor-blink{display:inline-block;width:8px;height:13px;background:var(--green);vertical-align:middle;animation:blink 1s infinite}
+
+/* ─── SKILLS ─────────────────────────────────────── */
+#skills{background:var(--bg2)}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.skill-card{background:var(--surf);border:1px solid var(--border);padding:26px;transition:border-color .2s,transform .2s}
+.skill-card:hover{border-color:var(--border2);transform:translateY(-3px)}
+.skill-cat{font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:2.5px;margin-bottom:16px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:7px}
+.skill-tag{font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);background:var(--bg);border:1px solid var(--border);padding:4px 11px;letter-spacing:.5px}
+
+/* ─── PROJECTS ───────────────────────────────────── */
+.projects-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.project-card{background:var(--surf);border:1px solid var(--border);transition:all .3s;cursor:none;overflow:hidden;position:relative}
+.project-card:hover{border-color:var(--green);transform:translateY(-5px);box-shadow:0 20px 60px #00ff8812}
+.proj-img-wrap{height:200px;overflow:hidden;position:relative;background:var(--bg3)}
+.proj-img{width:100%;height:100%;object-fit:cover;transition:transform .45s}
+.project-card:hover .proj-img{transform:scale(1.07)}
+.proj-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:2px;flex-direction:column;gap:10px}
+.proj-placeholder svg{opacity:.3}
+.proj-badge{position:absolute;top:12px;right:12px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;padding:4px 10px;background:var(--green);color:var(--bg);font-weight:700}
+.proj-body{padding:22px 24px}
+.proj-cat{font-family:'Space Mono',monospace;font-size:9px;color:var(--green);letter-spacing:2.5px;margin-bottom:7px}
+.proj-name{font-size:19px;font-weight:700;margin-bottom:9px;line-height:1.25}
+.proj-short{font-size:13.5px;color:var(--text2);line-height:1.65;margin-bottom:14px}
+.proj-stack{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:18px}
+.stack-tag{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);border:1px solid var(--border);padding:3px 8px}
+.proj-links{display:flex;gap:14px;align-items:center}
+.proj-link{display:flex;align-items:center;gap:5px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);transition:color .2s;cursor:none}
+.proj-link:hover{color:var(--green)}
+.proj-detail-btn{display:flex;align-items:center;gap:6px;font-family:'Space Mono',monospace;font-size:10px;color:var(--green);background:none;border:none;cursor:none;margin-left:auto;transition:gap .2s}
+.proj-detail-btn:hover{gap:10px}
+
+/* ─── CONTACT ────────────────────────────────────── */
+#contact{background:var(--bg2)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.contact-links{display:flex;flex-direction:column;gap:14px}
+.contact-link{display:flex;align-items:center;gap:16px;padding:18px 22px;border:1px solid var(--border);color:var(--text2);transition:all .2s;background:var(--surf);cursor:none}
+.contact-link:hover{border-color:var(--green);color:var(--green);background:var(--gdim)}
+.contact-link-icon{flex-shrink:0;opacity:.7}
+.contact-link:hover .contact-link-icon{opacity:1}
+.contact-link-lbl{font-size:14px;font-weight:600}
+.contact-link-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-top:2px}
+.contact-link:hover .contact-link-sub{color:var(--green2)}
+.contact-arrow{margin-left:auto;opacity:.4;transition:all .2s}
+.contact-link:hover .contact-arrow{opacity:1;transform:translateX(4px)}
+
+/* ─── FOOTER ─────────────────────────────────────── */
+.footer-inner{display:flex;justify-content:space-between;align-items:center;padding:28px 0;border-top:1px solid var(--border)}
+.footer-txt{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:.5px}
+
+/* ─── PROJECT PAGE ───────────────────────────────── */
+#project-page{display:none;padding-top:80px;min-height:100vh}
+#project-page.active{display:block}
+.pp-hero{padding:56px 0;border-bottom:1px solid var(--border)}
+.pp-back{display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;color:var(--text2);background:none;border:none;cursor:none;margin-bottom:28px;letter-spacing:1px;transition:color .2s}
+.pp-back:hover{color:var(--green)}
+.pp-title{font-size:clamp(38px,7vw,80px);font-weight:800;letter-spacing:-2.5px;line-height:.95;margin-bottom:16px}
+.pp-desc{font-size:16px;color:var(--text2);line-height:1.82;max-width:680px;margin-bottom:32px}
+.pp-meta{display:flex;flex-wrap:wrap;gap:36px}
+.pp-meta-item label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:2px;display:block;margin-bottom:7px}
+.pp-gallery{margin:52px 0}
+.pp-main-img{width:100%;max-height:500px;object-fit:cover;border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px}
+.pp-thumbs{display:flex;gap:8px;flex-wrap:wrap}
+.pp-thumb{width:80px;height:52px;object-fit:cover;border:1px solid var(--border);border-radius:var(--r);cursor:none;transition:border-color .2s;flex-shrink:0}
+.pp-thumb.active,.pp-thumb:hover{border-color:var(--green)}
+.pp-video{margin:40px 0}
+.pp-video video{width:100%;border:1px solid var(--border);border-radius:var(--r)}
+.pp-section{padding:40px 0;border-top:1px solid var(--border)}
+.pp-section h3{font-size:18px;font-weight:700;color:var(--green);margin-bottom:14px;font-family:'Space Mono',monospace;letter-spacing:1px;font-size:12px}
+.pp-section p{color:var(--text2);line-height:1.82;font-size:15.5px}
+.features-list{list-style:none}
+.features-list li{display:flex;align-items:flex-start;gap:12px;color:var(--text2);padding:10px 0;border-bottom:1px solid var(--border);font-size:15px;line-height:1.6}
+.features-list li::before{content:'▸';color:var(--green);flex-shrink:0;margin-top:1px}
+.pp-actions{padding:40px 0;display:flex;gap:14px;flex-wrap:wrap}
+
+/* ─── ADMIN ──────────────────────────────────────── */
+#admin-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:800;overflow-y:auto}
+#admin-overlay.active{display:block}
+.admin-header{background:var(--surf);border-bottom:1px solid var(--border);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.admin-logo{font-family:'Space Mono',monospace;font-size:13px;color:var(--green);letter-spacing:2px}
+.admin-body{padding:40px 32px;max-width:1000px;margin:0 auto}
+.admin-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:40px}
+.admin-tab{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:var(--text3);background:none;border:none;padding:13px 22px;cursor:none;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s}
+.admin-tab:hover{color:var(--text)}
+.admin-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fg{display:flex;flex-direction:column;gap:7px}
+.fg.full{grid-column:1/-1}
+.fg label{font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px}
+.fg input,.fg textarea,.fg select{background:var(--surf);border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:11px 14px;border-radius:var(--r);outline:none;transition:border-color .2s;width:100%}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--green)}
+.fg textarea{resize:vertical;min-height:90px}
+.fg select{cursor:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234a6a4a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:calc(100% - 12px) center}
+.hint{font-family:'Space Mono',monospace;font-size:9px;color:var(--text3)}
+.btn-grn{background:var(--green);color:var(--bg);font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1.5px;border:none;padding:12px 26px;cursor:none;transition:all .2s}
+.btn-grn:hover{background:var(--green2)}
+.btn-out{background:transparent;color:var(--text2);font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;border:1px solid var(--border);padding:11px 22px;cursor:none;transition:all .2s}
+.btn-out:hover{border-color:var(--text2);color:var(--text)}
+.btn-danger{background:transparent;color:var(--red);font-family:'Space Mono',monospace;font-size:10px;border:1px solid #ff445530;padding:7px 14px;cursor:none;transition:all .2s}
+.btn-danger:hover{background:#ff44550d;border-color:var(--red)}
+.btn-sm{padding:7px 14px;font-size:10px}
+
+/* Admin list */
+.admin-proj-list{display:flex;flex-direction:column;gap:14px}
+.admin-proj-item{background:var(--surf);border:1px solid var(--border);padding:18px 22px;display:flex;align-items:center;gap:18px;transition:border-color .2s}
+.admin-proj-item:hover{border-color:var(--border2)}
+.apl-thumb{width:70px;height:46px;object-fit:cover;border-radius:var(--r);border:1px solid var(--border);flex-shrink:0}
+.apl-thumb-ph{width:70px;height:46px;background:var(--bg3);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--text3);font-family:'Space Mono',monospace;border-radius:var(--r)}
+.apl-info{flex:1;min-width:0}
+.apl-name{font-size:15px;font-weight:600}
+.apl-meta{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.apl-actions{display:flex;gap:8px;flex-shrink:0}
+.empty-state{text-align:center;padding:60px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text3)}
+
+/* Login */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center}
+.login-box{width:360px;background:var(--surf);border:1px solid var(--border);padding:44px 38px}
+.login-title{font-size:26px;font-weight:800;margin-bottom:6px}
+.login-sub{font-family:'Space Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:32px;letter-spacing:1px}
+.login-err{font-family:'Space Mono',monospace;font-size:10px;color:var(--red);margin-bottom:14px;display:none}
+.login-err.show{display:block}
+
+/* Notification */
+.notif{position:fixed;bottom:28px;right:28px;background:var(--surf);border:1px solid var(--green);padding:14px 20px;font-family:'Space Mono',monospace;font-size:11px;color:var(--green);z-index:9000;transform:translateY(80px);opacity:0;transition:all .3s;border-radius:var(--r);letter-spacing:.5px}
+.notif.show{transform:translateY(0);opacity:1}
+
+/* ─── RESPONSIVE ─────────────────────────────────── */
+@media(max-width:820px){
+  .nav-links{display:none}
+  .nav-toggle{display:flex}
+  .nav-mobile{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:32px;z-index:490}
+  .nav-mobile .nav-link{font-size:16px}
+  .nav-mobile .nav-btn{font-size:14px;padding:12px 28px}
+  .about-grid,.contact-grid{grid-template-columns:1fr;gap:40px}
+  .skills-grid{grid-template-columns:1fr 1fr}
+  .projects-grid{grid-template-columns:1fr}
+  .pp-meta{gap:20px}
+  .form-grid{grid-template-columns:1fr}
+  .fg.full{grid-column:1}
+  .admin-body{padding:24px 16px}
+  .admin-header{padding:16px}
+}
+@media(max-width:480px){
+  .skills-grid{grid-template-columns:1fr}
+  .hero-actions{flex-direction:column}
+  .btn-primary,.btn-secondary{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif"></div>
+
+<!-- ══════════════════════════════════════════════════
+     MAIN SITE
+══════════════════════════════════════════════════ -->
+<div id="main-site">
+
+  <!-- NAV -->
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <a href="#home" class="nav-logo" onclick="closeMobile()">NP<span>.</span></a>
+        <div class="nav-links">
+          <a href="#about" class="nav-link">about</a>
+          <a href="#projects" class="nav-link">projects</a>
+          <a href="#skills" class="nav-link">skills</a>
+          <a href="#contact" class="nav-link">contact</a>
+          <a href="#" class="nav-link" id="nav-resume-link" style="display:none">resume</a>
+          <button class="nav-btn" onclick="openAdmin()">admin</button>
+        </div>
+        <button class="nav-toggle" onclick="toggleMobile()">☰</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="nav-mobile" id="nav-mobile" style="display:none">
+    <a href="#about" class="nav-link" onclick="closeMobile()">about</a>
+    <a href="#projects" class="nav-link" onclick="closeMobile()">projects</a>
+    <a href="#skills" class="nav-link" onclick="closeMobile()">skills</a>
+    <a href="#contact" class="nav-link" onclick="closeMobile()">contact</a>
+    <a href="#" class="nav-link" id="nav-resume-mobile" style="display:none" onclick="closeMobile()">resume</a>
+    <button class="nav-btn" onclick="closeMobile();openAdmin()">admin</button>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="hero-grid"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-scanline"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-tag anim-1"><span class="hero-tag-dot"></span>OPEN TO COLLABORATIONS</div>
+        <h1 class="hero-name anim-2"><span class="first">Naveen</span><span class="last">Phartyal.</span></h1>
+        <p class="hero-subtitle anim-3">First-Year CS Student &nbsp;·&nbsp; Python Developer &nbsp;·&nbsp; Aspiring Backend Engineer</p>
+        <p class="hero-desc anim-4">I build practical Python and web projects with a focus on clean code and real-world functionality. From automation tools to full-stack Django apps — I ship things that actually work.</p>
+        <div class="hero-actions anim-5">
+          <a href="#projects" class="btn-primary">View Projects &nbsp;→</a>
+          <a href="#" class="btn-secondary" id="hero-resume-btn" style="display:none">↓ Resume</a>
+          <a href="#contact" class="btn-secondary" id="hero-contact-btn">Get In Touch</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">SCROLL</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="section-label">01 / ABOUT</div>
+      <div class="about-grid">
+        <div class="about-text">
+          <h2 class="section-title">Building real things<br/><span class="green">from day one.</span></h2>
+          <p>I'm a first-year Computer Science student who doesn't wait to start building. While most are still learning the basics, I'm already shipping projects — automation tools, web apps, and backend systems that solve real problems.</p>
+          <p>My focus is Python and backend development. I love the challenge of making systems that are efficient, scalable, and actually useful. Django, Flask, Supabase — I work with whatever gets the job done right.</p>
+          <p>My goal: building scalable web applications and backend systems that can handle real-world load. Every project is a step toward that.</p>
+          <div class="about-stats">
+            <div class="stat"><span class="stat-num" id="proj-count">3+</span><span class="stat-lbl">PROJECTS</span></div>
+            <div class="stat"><span class="stat-num">1st</span><span class="stat-lbl">YEAR CS</span></div>
+            <div class="stat"><span class="stat-num">∞</span><span class="stat-lbl">TO LEARN</span></div>
+          </div>
+        </div>
+        <div class="terminal">
+          <div class="term-bar">
+            <div class="t-dot t-r"></div><div class="t-dot t-y"></div><div class="t-dot t-g"></div>
+            <span class="term-name">naveen.py</span>
+          </div>
+          <div class="term-body">
+            <div class="t-line"><span class="prompt">$ </span><span class="cmd">python naveen.py</span></div>
+            <div class="t-line">&nbsp;</div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">name</span> <span class="val">= "Naveen Phartyal"</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">role</span> <span class="val">= "Backend Developer"</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">stack</span> <span class="val">= ["Python","Django","Flask"]</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">database</span> <span class="val">= ["Supabase","PostgreSQL"]</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">tools</span> <span class="val">= ["Git","FFmpeg","VS Code"]</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">goal</span> <span class="val">= "Scalable Web Systems"</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">status</span> <span class="val">= "Building &amp; Learning"</span></div>
+            <div class="t-line">&nbsp;</div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmt"># currently working on...</span></div>
+            <div class="t-line"><span class="prompt">&gt;&gt;&gt; </span><span class="cmd">print(naveen.projects)</span></div>
+            <div class="t-line"><span class="cmt">→ </span><span class="val" id="terminal-projects">Loading...</span></div>
+            <div class="t-line"><span class="cursor-blink"></span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-label">02 / PROJECTS</div>
+      <h2 class="section-title">Things I've <span class="green">built.</span></h2>
+      <div class="projects-grid" id="projects-grid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="container">
+      <div class="section-label">03 / SKILLS</div>
+      <h2 class="section-title">Tech I work with.</h2>
+      <div class="skills-grid" id="skills-grid">
+        <!-- injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="container">
+      <div class="section-label">04 / CONTACT</div>
+      <div class="contact-grid">
+        <div>
+          <h2 class="section-title">Let's build<br/><span class="green">something.</span></h2>
+          <p style="color:var(--text2);line-height:1.8;font-size:16px">Open to collaborations, internships, freelance projects, and anything interesting. If you want to work together or just talk Python — reach out.</p>
+        </div>
+        <div class="contact-links">
+          <a href="mailto:naveen.phartyal2023@gmail.com" class="contact-link">
+            <svg class="contact-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <div><div class="contact-link-lbl">Email</div><div class="contact-link-sub">naveen.phartyal2023@gmail.com</div></div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="https://github.com/Nvn-One-Eyed-Eagle" target="_blank" class="contact-link">
+            <svg class="contact-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+            <div><div class="contact-link-lbl">GitHub</div><div class="contact-link-sub">Nvn-One-Eyed-Eagle</div></div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/in/naveen-phartyal-0ba3a3377/" target="_blank" class="contact-link">
+            <svg class="contact-link-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            <div><div class="contact-link-lbl">LinkedIn</div><div class="contact-link-sub">naveen-phartyal-0ba3a3377</div></div>
+            <svg class="contact-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-txt">© 2024 <span class="green">Naveen Phartyal</span> — All rights reserved</span>
+      <span class="footer-txt">Python · Django · Supabase</span>
+    </div>
+  </div>
+
+</div><!-- #main-site -->
+
+
+<!-- ══════════════════════════════════════════════════
+     PROJECT PAGE
+══════════════════════════════════════════════════ -->
+<div id="project-page">
+  <div class="container">
+    <div class="pp-hero">
+      <button class="pp-back" onclick="closeProjPage()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Projects
+      </button>
+      <div class="proj-cat" id="pp-cat"></div>
+      <h1 class="pp-title" id="pp-title"></h1>
+      <p class="pp-desc" id="pp-desc"></p>
+      <div class="pp-meta" id="pp-meta"></div>
+    </div>
+
+    <div class="pp-gallery" id="pp-gallery" style="display:none">
+      <img class="pp-main-img" id="pp-main-img" src="" alt=""/>
+      <div class="pp-thumbs" id="pp-thumbs"></div>
+    </div>
+
+    <div id="pp-video-wrap" class="pp-video" style="display:none">
+      <video controls id="pp-video"><source id="pp-video-src" src=""/></video>
+    </div>
+
+    <div class="pp-section" id="pp-problem-sec" style="display:none">
+      <h3>PROBLEM SOLVED</h3>
+      <p id="pp-problem"></p>
+    </div>
+
+    <div class="pp-section" id="pp-features-sec" style="display:none">
+      <h3>KEY FEATURES</h3>
+      <ul class="features-list" id="pp-features"></ul>
+    </div>
+
+    <div class="pp-actions" id="pp-actions"></div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════
+     ADMIN OVERLAY
+══════════════════════════════════════════════════ -->
+<div id="admin-overlay">
+
+  <!-- LOGIN -->
+  <div id="admin-login">
+    <div class="login-wrap">
+      <div class="login-box">
+        <div style="color:var(--green);margin-bottom:18px">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h2 class="login-title">Admin Panel</h2>
+        <p class="login-sub">DEFAULT PASSWORD: naveen2024</p>
+        <div class="login-err" id="login-err">Incorrect password. Try again.</div>
+        <div class="fg" style="margin-bottom:20px">
+          <label>PASSWORD</label>
+          <input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+        <button class="btn-grn" style="width:100%" onclick="doLogin()">Unlock Admin →</button>
+        <button class="btn-out" style="width:100%;margin-top:10px" onclick="closeAdmin()">← Back to Portfolio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL -->
+  <div id="admin-panel" style="display:none">
+    <div class="admin-header">
+      <span class="admin-logo">⬡ ADMIN PANEL</span>
+      <button class="btn-out btn-sm" onclick="closeAdmin()">← Back to Portfolio</button>
+    </div>
+    <div class="admin-body">
+
+      <!-- TABS -->
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="projects" onclick="switchTab('projects',this)">Projects</button>
+        <button class="admin-tab" data-tab="skills" onclick="switchTab('skills',this)">Skills</button>
+        <button class="admin-tab" data-tab="resume" onclick="switchTab('resume',this)">Resume</button>
+      </div>
+
+      <!-- PROJECTS TAB -->
+      <div class="tab-panel active" id="tab-projects">
+        <div id="proj-list-view">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+            <h2 style="font-size:22px;font-weight:800">Projects <span id="proj-list-count" style="color:var(--text3);font-size:14px;font-weight:400"></span></h2>
+            <button class="btn-grn" onclick="showProjForm(null)">
+              <span style="display:flex;align-items:center;gap:7px">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Add Project
+              </span>
+            </button>
+          </div>
+          <div class="admin-proj-list" id="admin-proj-list"></div>
+        </div>
+        <div id="proj-form-view" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px">
+            <h2 style="font-size:22px;font-weight:800" id="form-heading">Add New Project</h2>
+            <button class="btn-out" onclick="hideProjForm()">Cancel</button>
+          </div>
+          <div class="form-grid">
+            <div class="fg"><label>PROJECT NAME *</label><input type="text" id="f-name" placeholder="My Awesome Project"/></div>
+            <div class="fg"><label>CATEGORY</label>
+              <select id="f-cat">
+                <option>Web App</option><option>Automation</option><option>Backend</option>
+                <option>CLI Tool</option><option>API</option><option>Other</option>
+              </select>
+            </div>
+            <div class="fg full"><label>SHORT DESCRIPTION</label><input type="text" id="f-short" placeholder="One-line summary shown on project cards"/></div>
+            <div class="fg full"><label>FULL DESCRIPTION</label><textarea id="f-desc" style="min-height:120px" placeholder="Detailed description shown on the project page..."></textarea></div>
+            <div class="fg"><label>TECH STACK</label><textarea id="f-stack" placeholder="Python&#10;Django&#10;Supabase"></textarea><span class="hint">One technology per line</span></div>
+            <div class="fg"><label>KEY FEATURES</label><textarea id="f-features" placeholder="User authentication&#10;Batch processing support"></textarea><span class="hint">One feature per line</span></div>
+            <div class="fg full"><label>PROBLEM SOLVED</label><textarea id="f-problem" placeholder="What real-world problem does this project solve?"></textarea></div>
+            <div class="fg"><label>GITHUB URL</label><input type="url" id="f-github" placeholder="https://github.com/Nvn-One-Eyed-Eagle/..."/></div>
+            <div class="fg"><label>LIVE DEMO URL</label><input type="url" id="f-live" placeholder="https://myapp.com (optional)"/></div>
+            <div class="fg full"><label>IMAGE URLS</label><textarea id="f-images" style="min-height:100px" placeholder="https://example.com/screenshot1.jpg&#10;https://example.com/screenshot2.jpg"></textarea><span class="hint">One URL per line. Add your project screenshots here. Replace dummy images with real ones anytime.</span></div>
+            <div class="fg full"><label>VIDEO URL (optional)</label><input type="url" id="f-video" placeholder="https://example.com/demo.mp4"/></div>
+            <div class="fg full">
+              <label style="display:flex;align-items:center;gap:10px;cursor:none">
+                <input type="checkbox" id="f-featured" style="width:16px;height:16px;accent-color:var(--green)"/>
+                Mark as Featured Project (shows badge on card)
+              </label>
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:28px">
+            <button class="btn-grn" onclick="saveProject()">Save Project</button>
+            <button class="btn-out" onclick="hideProjForm()">Cancel</button>
+          </div>
+          <input type="hidden" id="f-id"/>
+        </div>
+      </div>
+
+      <!-- SKILLS TAB -->
+      <div class="tab-panel" id="tab-skills">
+        <h2 style="font-size:22px;font-weight:800;margin-bottom:28px">Skills</h2>
+        <div id="skills-form-area"></div>
+        <div style="margin:20px 0 28px">
+          <label class="fg" style="margin-bottom:8px;display:block">
+            <span style="font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:1.5px">ADD NEW CATEGORY</span>
+          </label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="text" id="new-cat-input" placeholder="e.g. DevOps" style="max-width:200px;background:var(--surf);border:1px solid var(--border);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;padding:11px 14px;border-radius:var(--r);outline:none"/>
+            <button class="btn-out" onclick="addSkillCategory()">Add Category</button>
+          </div>
+        </div>
+        <button class="btn-grn" onclick="saveSkills()">Save Skills</button>
+      </div>
+
+      <!-- RESUME TAB -->
+      <div class="tab-panel" id="tab-resume">
+        <h2 style="font-size:22px;font-weight:800;margin-bottom:28px">Resume</h2>
+        <div class="fg" style="max-width:580px;margin-bottom:24px">
+          <label>RESUME URL</label>
+          <input type="url" id="resume-url-input" placeholder="https://drive.google.com/file/d/YOUR_FILE_ID/view"/>
+          <span class="hint">Upload your resume to Google Drive, Dropbox, or any public URL. Paste the shareable link here and a Resume button will appear in the nav and hero section.</span>
+        </div>
+        <button class="btn-grn" onclick="saveResume()">Save Resume URL</button>
+      </div>
+
+    </div>
+  </div>
+</div><!-- #admin-overlay -->
+
+
+<script>
+/* ══════════════════════════════════════════════════
+   DATA STORE
+══════════════════════════════════════════════════ */
+const STORAGE_KEY = 'np_portfolio_v2';
+
+const DEFAULT_DATA = {
+  resumeUrl: '',
+  projects: [
+    {
+      id: '1',
+      name: 'AutoSub Generator',
+      shortDesc: 'Automated subtitle generator using FFmpeg & Python',
+      description: 'A powerful automation tool that generates accurate subtitles for any video file using FFmpeg and speech recognition. Solves the tedious manual process of transcribing video content by automating the entire pipeline — from audio extraction to SRT file output. Designed for content creators and developers who need fast, reliable subtitles.',
+      techStack: ['Python','FFmpeg','SpeechRecognition','subprocess'],
+      problemSolved: 'Manual subtitle creation is time-consuming and error-prone. This tool automates the entire pipeline in seconds — from audio extraction to perfectly timed SRT output.',
+      keyFeatures: ['Batch process multiple videos at once', 'Auto-detect language and generate timed SRT files'],
+      github: 'https://github.com/Nvn-One-Eyed-Eagle',
+      liveDemo: '',
+      images: ['https://images.unsplash.com/photo-1536240478700-b869ad10e128?w=900&q=80','https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=900&q=80'],
+      video: '',
+      category: 'Automation',
+      featured: true
+    },
+    {
+      id: '2',
+      name: 'Django Task Manager',
+      shortDesc: 'Full-stack task management web app with Django + Supabase',
+      description: 'A clean and functional task management application built with Django and Supabase. Features user authentication, task CRUD operations, priority tagging, and deadline tracking. Demonstrates full Django MVC architecture with cloud PostgreSQL database integration — a real-world backend project.',
+      techStack: ['Python','Django','Supabase','HTML','CSS','JavaScript'],
+      problemSolved: 'Personal productivity tools often lack a clean, scalable backend. This project showcases how Django and Supabase can be combined for a production-ready app architecture.',
+      keyFeatures: ['Session-based user authentication', 'Supabase PostgreSQL backend with real-time sync'],
+      github: 'https://github.com/Nvn-One-Eyed-Eagle',
+      liveDemo: '',
+      images: ['https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=900&q=80','https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=900&q=80'],
+      video: '',
+      category: 'Web App',
+      featured: true
+    },
+    {
+      id: '3',
+      name: 'Python Web Scraper',
+      shortDesc: 'Automated data extraction tool with export capabilities',
+      description: 'A versatile web scraping toolkit built in Python that extracts structured data from websites and exports to CSV or JSON formats. Features rate limiting, error handling, and support for JavaScript-rendered pages via Selenium integration.',
+      techStack: ['Python','BeautifulSoup','Selenium','requests','pandas'],
+      problemSolved: 'Manual data collection from websites is inefficient and error-prone. This scraper automates extraction with built-in anti-block measures and clean data output.',
+      keyFeatures: ['Dynamic JS page rendering with Selenium', 'CSV and JSON export pipeline with pandas'],
+      github: 'https://github.com/Nvn-One-Eyed-Eagle',
+      liveDemo: '',
+      images: ['https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=900&q=80'],
+      video: '',
+      category: 'Automation',
+      featured: false
+    }
+  ],
+  skills: {
+    'Programming': ['Python','JavaScript'],
+    'Web': ['HTML','CSS','Django','Flask'],
+    'Tools': ['Git & GitHub','VS Code','FFmpeg','Supabase']
+  }
+};
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_DATA));
+}
+function saveData(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); }catch(e){}
+}
+let appData = loadData();
+
+/* ══════════════════════════════════════════════════
+   CURSOR
+══════════════════════════════════════════════════ */
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let rx=0,ry=0,dx=0,dy=0;
+document.addEventListener('mousemove',e=>{
+  dx=e.clientX; dy=e.clientY;
+  dot.style.left=dx+'px'; dot.style.top=dy+'px';
+});
+function animRing(){
+  rx+=(dx-rx)*.12; ry+=(dy-ry)*.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+document.addEventListener('mousedown',()=>{ dot.style.transform='translate(-50%,-50%) scale(1.8)'; ring.style.transform='translate(-50%,-50%) scale(.7)'; });
+document.addEventListener('mouseup',()=>{ dot.style.transform='translate(-50%,-50%) scale(1)'; ring.style.transform='translate(-50%,-50%) scale(1)'; });
+
+/* ══════════════════════════════════════════════════
+   NOTIFICATION
+══════════════════════════════════════════════════ */
+function showNotif(msg){
+  const n=document.getElementById('notif');
+  n.textContent=msg; n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'),2800);
+}
+
+/* ══════════════════════════════════════════════════
+   NAV MOBILE
+══════════════════════════════════════════════════ */
+let mobileOpen=false;
+function toggleMobile(){
+  mobileOpen=!mobileOpen;
+  const m=document.getElementById('nav-mobile');
+  m.style.display=mobileOpen?'flex':'none';
+}
+function closeMobile(){
+  mobileOpen=false;
+  document.getElementById('nav-mobile').style.display='none';
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER PROJECTS GRID
+══════════════════════════════════════════════════ */
+function renderProjects(){
+  const grid=document.getElementById('projects-grid');
+  const count=document.getElementById('proj-count');
+  if(count) count.textContent=appData.projects.length+'+';
+  
+  // Update terminal
+  const names = appData.projects.map(p=>p.name).join(', ');
+  const termEl = document.getElementById('terminal-projects');
+  if(termEl) termEl.textContent = names || 'No projects yet';
+
+  if(!appData.projects.length){
+    grid.innerHTML='<p style="color:var(--text3);font-family:\'Space Mono\',monospace;font-size:12px;padding:60px 0;text-align:center;grid-column:1/-1">No projects yet. Add them via the admin panel.</p>';
+    return;
+  }
+  grid.innerHTML = appData.projects.map(p=>{
+    const img = p.images && p.images[0]
+      ? `<img class="proj-img" src="${p.images[0]}" alt="${p.name}" onerror="this.parentElement.innerHTML='<div class=proj-placeholder><svg width=40 height=40 viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\'></rect><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'></circle><polyline points=\\'21 15 16 10 5 21\\'></polyline></svg>[ PROJECT IMAGE ]</div>'"/>`
+      : `<div class="proj-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>[ PROJECT IMAGE ]</div>`;
+    const tags = (p.techStack||[]).map(t=>`<span class="stack-tag">${t}</span>`).join('');
+    const ghLink = p.github ? `<a class="proj-link" href="${p.github}" target="_blank" onclick="event.stopPropagation()"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg> GitHub</a>` : '';
+    const liveLink = p.liveDemo ? `<a class="proj-link" href="${p.liveDemo}" target="_blank" onclick="event.stopPropagation()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Live</a>` : '';
+    return `
+    <div class="project-card" onclick="openProjPage('${p.id}')">
+      <div class="proj-img-wrap">
+        ${img}
+        ${p.featured?'<div class="proj-badge">FEATURED</div>':''}
+      </div>
+      <div class="proj-body">
+        <div class="proj-cat">${p.category||'PROJECT'}</div>
+        <h3 class="proj-name">${p.name}</h3>
+        <p class="proj-short">${p.shortDesc}</p>
+        <div class="proj-stack">${tags}</div>
+        <div class="proj-links">
+          ${ghLink}${liveLink}
+          <button class="proj-detail-btn">Details <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════
+   RENDER SKILLS
+══════════════════════════════════════════════════ */
+function renderSkills(){
+  const grid=document.getElementById('skills-grid');
+  const entries=Object.entries(appData.skills);
+  grid.innerHTML=entries.map(([cat,tags])=>`
+    <div class="skill-card">
+      <div class="skill-cat">${cat.toUpperCase()}</div>
+      <div class="skill-tags">${tags.map(t=>`<span class="skill-tag">${t}</span>`).join('')}</div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════
+   RESUME
+══════════════════════════════════════════════════ */
+function applyResumeUrl(){
+  const url = appData.resumeUrl;
+  const navLink=document.getElementById('nav-resume-link');
+  const navMob=document.getElementById('nav-resume-mobile');
+  const heroBtn=document.getElementById('hero-resume-btn');
+  const heroContact=document.getElementById('hero-contact-btn');
+  if(url){
+    navLink.href=url; navLink.style.display='inline';
+    navMob.href=url; navMob.style.display='inline';
+    heroBtn.href=url; heroBtn.style.display='inline-flex';
+    heroContact.style.display='none';
+  } else {
+    navLink.style.display='none';
+    navMob.style.display='none';
+    heroBtn.style.display='none';
+    heroContact.style.display='inline-flex';
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   PROJECT PAGE
+══════════════════════════════════════════════════ */
+let currentImgIdx=0;
+let currentProjImgs=[];
+
+function openProjPage(id){
+  const p=appData.projects.find(x=>x.id===id);
+  if(!p) return;
+  document.getElementById('main-site').style.display='none';
+  const pp=document.getElementById('project-page');
+  pp.classList.add('active');
+  window.scrollTo(0,0);
+
+  document.getElementById('pp-cat').textContent=p.category||'PROJECT';
+  document.getElementById('pp-title').textContent=p.name;
+  document.getElementById('pp-desc').textContent=p.description||p.shortDesc;
+
+  // Meta
+  let metaHtml='';
+  if(p.techStack&&p.techStack.length){
+    metaHtml+=`<div class="pp-meta-item"><label>TECH STACK</label><div class="proj-stack">${p.techStack.map(t=>`<span class="stack-tag">${t}</span>`).join('')}</div></div>`;
+  }
+  if(p.github) metaHtml+=`<div class="pp-meta-item"><label>GITHUB</label><a href="${p.github}" target="_blank" class="proj-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg> View Code</a></div>`;
+  if(p.liveDemo) metaHtml+=`<div class="pp-meta-item"><label>LIVE DEMO</label><a href="${p.liveDemo}" target="_blank" class="proj-link"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Open App</a></div>`;
+  document.getElementById('pp-meta').innerHTML=metaHtml;
+
+  // Gallery
+  currentProjImgs=p.images||[];
+  const gallery=document.getElementById('pp-gallery');
+  if(currentProjImgs.length){
+    gallery.style.display='block';
+    currentImgIdx=0;
+    setMainImg(0);
+    const thumbs=document.getElementById('pp-thumbs');
+    if(currentProjImgs.length>1){
+      thumbs.innerHTML=currentProjImgs.map((img,i)=>`<img class="pp-thumb${i===0?' active':''}" src="${img}" alt="Screenshot ${i+1}" onclick="setMainImg(${i})" onerror="this.style.display='none'"/>`).join('');
+    } else { thumbs.innerHTML=''; }
+  } else { gallery.style.display='none'; }
+
+  // Video
+  const vidWrap=document.getElementById('pp-video-wrap');
+  if(p.video){ vidWrap.style.display='block'; document.getElementById('pp-video-src').src=p.video; document.getElementById('pp-video').load(); }
+  else { vidWrap.style.display='none'; }
+
+  // Problem
+  const probSec=document.getElementById('pp-problem-sec');
+  if(p.problemSolved){ probSec.style.display='block'; document.getElementById('pp-problem').textContent=p.problemSolved; }
+  else probSec.style.display='none';
+
+  // Features
+  const featSec=document.getElementById('pp-features-sec');
+  if(p.keyFeatures&&p.keyFeatures.length){
+    featSec.style.display='block';
+    document.getElementById('pp-features').innerHTML=p.keyFeatures.map(f=>`<li>${f}</li>`).join('');
+  } else featSec.style.display='none';
+
+  // Actions
+  let actHtml='';
+  if(p.github) actHtml+=`<a href="${p.github}" target="_blank" class="btn-primary"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg> View on GitHub</a>`;
+  if(p.liveDemo) actHtml+=`<a href="${p.liveDemo}" target="_blank" class="btn-secondary"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg> Live Demo</a>`;
+  actHtml+=`<button class="btn-out" onclick="closeProjPage()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg> Back</button>`;
+  document.getElementById('pp-actions').innerHTML=actHtml;
+}
+
+function setMainImg(idx){
+  currentImgIdx=idx;
+  const mainImg=document.getElementById('pp-main-img');
+  mainImg.src=currentProjImgs[idx];
+  mainImg.onerror=()=>mainImg.style.display='none';
+  document.querySelectorAll('.pp-thumb').forEach((t,i)=>t.classList.toggle('active',i===idx));
+}
+
+function closeProjPage(){
+  document.getElementById('project-page').classList.remove('active');
+  document.getElementById('main-site').style.display='block';
+  window.scrollTo(0,0);
+}
+
+/* ══════════════════════════════════════════════════
+   ADMIN
+══════════════════════════════════════════════════ */
+function openAdmin(){
+  closeMobile();
+  document.getElementById('main-site').style.display='none';
+  document.getElementById('project-page').classList.remove('active');
+  const overlay=document.getElementById('admin-overlay');
+  overlay.classList.add('active');
+  // show login or panel
+  const authed=sessionStorage.getItem('np_admin_authed');
+  if(authed==='1'){
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    renderAdminPanel();
+  } else {
+    document.getElementById('admin-login').style.display='flex';
+    document.getElementById('admin-panel').style.display='none';
+  }
+}
+
+function closeAdmin(){
+  document.getElementById('admin-overlay').classList.remove('active');
+  document.getElementById('main-site').style.display='block';
+}
+
+function doLogin(){
+  const pass=document.getElementById('login-pass').value;
+  const err=document.getElementById('login-err');
+  if(pass==='naveen2024'){
+    sessionStorage.setItem('np_admin_authed','1');
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    err.classList.remove('show');
+    document.getElementById('login-pass').value='';
+    renderAdminPanel();
+  } else {
+    err.classList.add('show');
+  }
+}
+
+function switchTab(tab, btn){
+  document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='skills') renderSkillsForm();
+  if(tab==='resume') document.getElementById('resume-url-input').value=appData.resumeUrl||'';
+}
+
+/* ── ADMIN PROJECTS ── */
+function renderAdminPanel(){
+  renderAdminProjList();
+  renderSkillsForm();
+  document.getElementById('resume-url-input').value=appData.resumeUrl||'';
+}
+
+function renderAdminProjList(){
+  const list=document.getElementById('admin-proj-list');
+  const countEl=document.getElementById('proj-list-count');
+  countEl.textContent=`(${appData.projects.length})`;
+  if(!appData.projects.length){
+    list.innerHTML='<div class="empty-state">No projects yet. Add your first one!</div>';
+    return;
+  }
+  list.innerHTML=appData.projects.map(p=>{
+    const thumb = p.images&&p.images[0]
+      ? `<img class="apl-thumb" src="${p.images[0]}" alt="${p.name}" onerror="this.outerHTML='<div class=apl-thumb-ph>IMG</div>'">`
+      : `<div class="apl-thumb-ph">IMG</div>`;
+    const stack=(p.techStack||[]).slice(0,4).join(', ');
+    return `
+    <div class="admin-proj-item">
+      ${thumb}
+      <div class="apl-info">
+        <div class="apl-name">${p.name}${p.featured?' <span style="color:var(--green);font-size:10px">★</span>':''}</div>
+        <div class="apl-meta">${p.category||''} ${stack?'· '+stack:''}</div>
+      </div>
+      <div class="apl-actions">
+        <button class="btn-out btn-sm" onclick="showProjForm('${p.id}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit
+        </button>
+        <button class="btn-danger" onclick="deleteProject('${p.id}')">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/></svg>
+          Delete
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showProjForm(id){
+  document.getElementById('proj-list-view').style.display='none';
+  document.getElementById('proj-form-view').style.display='block';
+  if(id){
+    const p=appData.projects.find(x=>x.id===id);
+    document.getElementById('form-heading').textContent='Edit Project';
+    document.getElementById('f-id').value=p.id;
+    document.getElementById('f-name').value=p.name||'';
+    document.getElementById('f-cat').value=p.category||'Web App';
+    document.getElementById('f-short').value=p.shortDesc||'';
+    document.getElementById('f-desc').value=p.description||'';
+    document.getElementById('f-stack').value=(p.techStack||[]).join('\n');
+    document.getElementById('f-features').value=(p.keyFeatures||[]).join('\n');
+    document.getElementById('f-problem').value=p.problemSolved||'';
+    document.getElementById('f-github').value=p.github||'';
+    document.getElementById('f-live').value=p.liveDemo||'';
+    document.getElementById('f-images').value=(p.images||[]).join('\n');
+    document.getElementById('f-video').value=p.video||'';
+    document.getElementById('f-featured').checked=!!p.featured;
+  } else {
+    document.getElementById('form-heading').textContent='Add New Project';
+    document.getElementById('f-id').value='';
+    ['f-name','f-short','f-desc','f-stack','f-features','f-problem','f-github','f-live','f-images','f-video'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('f-cat').value='Web App';
+    document.getElementById('f-featured').checked=false;
+  }
+}
+
+function hideProjForm(){
+  document.getElementById('proj-form-view').style.display='none';
+  document.getElementById('proj-list-view').style.display='block';
+}
+
+function saveProject(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){ alert('Project name is required.'); return; }
+  const splitLines=id=>document.getElementById(id).value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const proj={
+    name,
+    category: document.getElementById('f-cat').value,
+    shortDesc: document.getElementById('f-short').value.trim(),
+    description: document.getElementById('f-desc').value.trim(),
+    techStack: splitLines('f-stack'),
+    keyFeatures: splitLines('f-features'),
+    problemSolved: document.getElementById('f-problem').value.trim(),
+    github: document.getElementById('f-github').value.trim(),
+    liveDemo: document.getElementById('f-live').value.trim(),
+    images: splitLines('f-images'),
+    video: document.getElementById('f-video').value.trim(),
+    featured: document.getElementById('f-featured').checked,
+  };
+  const existId=document.getElementById('f-id').value;
+  if(existId){
+    proj.id=existId;
+    appData.projects=appData.projects.map(p=>p.id===existId?proj:p);
+  } else {
+    proj.id=Date.now().toString();
+    appData.projects.push(proj);
+  }
+  saveData();
+  renderProjects();
+  renderAdminProjList();
+  hideProjForm();
+  showNotif('✓ Project saved successfully!');
+}
+
+function deleteProject(id){
+  if(!confirm('Delete this project? This cannot be undone.')) return;
+  appData.projects=appData.projects.filter(p=>p.id!==id);
+  saveData();
+  renderProjects();
+  renderAdminProjList();
+  showNotif('Project deleted.');
+}
+
+/* ── ADMIN SKILLS ── */
+function renderSkillsForm(){
+  const area=document.getElementById('skills-form-area');
+  area.innerHTML=Object.entries(appData.skills).map(([cat,tags])=>`
+    <div class="fg" style="margin-bottom:18px">
+      <label>${cat.toUpperCase()} <button class="btn-danger" style="margin-left:8px;font-size:9px;padding:3px 8px" onclick="deleteSkillCategory('${cat}')">✕ Remove</button></label>
+      <textarea id="skill-${cat}" style="min-height:55px">${tags.join(', ')}</textarea>
+      <span class="hint">Comma separated</span>
+    </div>`).join('');
+}
+
+function addSkillCategory(){
+  const inp=document.getElementById('new-cat-input');
+  const val=inp.value.trim();
+  if(!val){ alert('Enter a category name.'); return; }
+  if(appData.skills[val]){ alert('Category already exists.'); return; }
+  appData.skills[val]=[];
+  inp.value='';
+  renderSkillsForm();
+}
+
+function deleteSkillCategory(cat){
+  if(!confirm(`Remove category "${cat}"?`)) return;
+  delete appData.skills[cat];
+  renderSkillsForm();
+}
+
+function saveSkills(){
+  const newSkills={};
+  Object.keys(appData.skills).forEach(cat=>{
+    const el=document.getElementById('skill-'+cat);
+    if(el) newSkills[cat]=el.value.split(',').map(x=>x.trim()).filter(Boolean);
+  });
+  appData.skills=newSkills;
+  saveData();
+  renderSkills();
+  showNotif('✓ Skills saved!');
+}
+
+/* ── ADMIN RESUME ── */
+function saveResume(){
+  appData.resumeUrl=document.getElementById('resume-url-input').value.trim();
+  saveData();
+  applyResumeUrl();
+  showNotif('✓ Resume URL saved!');
+}
+
+/* ══════════════════════════════════════════════════
+   SCROLL ANIMATIONS
+══════════════════════════════════════════════════ */
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){ e.target.classList.add('visible'); }
+  });
+},{threshold:0.1});
+
+function observeElements(){
+  document.querySelectorAll('.skill-card, .project-card, .contact-link').forEach(el=>{
+    el.style.opacity='0';
+    el.style.transform='translateY(20px)';
+    el.style.transition='opacity .5s ease, transform .5s ease';
+    observer.observe(el);
+  });
+}
+
+// Patch observer to apply visible style
+const style=document.createElement('style');
+style.textContent='.visible{opacity:1!important;transform:translateY(0)!important}';
+document.head.appendChild(style);
+
+/* ══════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded',()=>{
+  renderProjects();
+  renderSkills();
+  applyResumeUrl();
+  setTimeout(observeElements, 100);
+});
+</script>
+</body>
+</html>
